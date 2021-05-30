@@ -1,15 +1,20 @@
 from interpreter.lexer import lexer
+from interpreter.parser import parser
 from view.init import init_turtle, loop
 from view.turtle import create_turtle
 
 with open('demo.trtl') as f:
     contents = f.read()
 
-lexer.input(contents)
+#lexer.input(contents)
 
-init_turtle()
+# init_turtle()
 
-t = create_turtle()
+# t = create_turtle()
+
+#for t in lexer:
+#    print(t)
+
 
 result = parser.parse(contents)
 print(result)
@@ -51,4 +56,4 @@ print(result)
 #   else:
 #     print('Dupa')
 
-loop()
+# loop()

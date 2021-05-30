@@ -1,6 +1,6 @@
 from turtle import Screen
 
-screen = Screen()
+# screen = Screen()
 
 def init_turtle():
   screen.setup(width=800, height=640)
