@@ -1,0 +1,10 @@
+version: "3.3"
+
+services:
+  logo:
+    image: logo
+    hostname: logo
+    container_name: logo
+    build:
+      context: .
+      dockerfile: Dockerfile

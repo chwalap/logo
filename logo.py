@@ -11,42 +11,44 @@ init_turtle()
 
 t = create_turtle()
 
-while True:
-  tok = lexer.token()
-  if not tok: 
-    break
+result = parser.parse(contents)
+print(result)
 
-  print(tok)
+# while True:
+#   tok = lexer.token()
+#   if not tok: 
+#     break
 
-  if tok.type == 'FORWARD':
-    value = lexer.token()
-    if not value:
-      break
+#   print(tok)
 
-    t.forward(value.value)
+#   if tok.type == 'FORWARD':
+#     if not value:
+#       break
+
+#     t.forward(value.value)
   
-  elif tok.type == 'BACKWARD':
-    value = lexer.token()
-    if not value:
-      break
+#   elif tok.type == 'FORWARD':
+#     value = lexer.token()
+#     if not value:
+#       break
 
-    t.backward(value.value)
+#     t.backward(value.value)
   
-  elif tok.type == 'RIGHT':
-    value = lexer.token()
-    if not value:
-      break
+#   elif tok.type == 'RIGHT':
+#     value = lexer.token()
+#     if not value:
+#       break
 
-    t.right(value.value)
+#     t.right(value.value)
   
-  elif tok.type == 'LEFT':
-    value = lexer.token()
-    if not value:
-      break
+#   elif tok.type == 'LEFT':
+#     value = lexer.token()
+#     if not value:
+#       break
 
-    t.left(value.value)
+#     t.left(value.value)
 
-  else:
-    print('Dupa')
+#   else:
+#     print('Dupa')
 
 loop()

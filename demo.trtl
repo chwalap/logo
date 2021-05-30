@@ -9,3 +9,18 @@ LT 120
 FD 200
 LT 120
 FD 200
+
+TO draw_square :a
+LOOP [1 4]
+  FW :a
+  RT 90
+END
+  FW :a
+  RT 90
+  FW :a
+  RT 90
+  FW :a
+  RT 90
+END
+
+draw_square 10
