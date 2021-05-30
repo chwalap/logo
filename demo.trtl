@@ -1,6 +1,5 @@
-RT 100 + 100
-RT 100 + 100
-
-TO dupa
-RT 12
-END
+:xyz = 5
+:xyz = :xyz + 2
+mv 20 40
+:xyz = 0
+KSU :xyz

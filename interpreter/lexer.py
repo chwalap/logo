@@ -3,111 +3,53 @@ import ply.lex as lex
 # Lexer states
 states = (
    #('code', 'exclusive'),
-   ('fdef', 'inclusive'),
+   # ('fdef', 'inclusive'),
 #   ('lbody', 'inclusive'),
 )
 
-symbols = {
-  'FORWARD' : "fw",
-  'FW' : "fw",
-  'BACKWARD' : "bw",
-  'BW' : "bw",
-  'RIGHT' : "rt",
-  'RT' : "rt",
-  'LEFT' : "lt",
-  'LT' : "lt",
-  #'SETXY', 'SETX', 'SETY',
-  #'SETHOME', 'SETH',
-  #'HOME',
+def get_state():
+  pass
 
-  # queries
-  # 'XCOR',
-  # 'YCOR',
-  # 'HEADING',
-  # 'PENDOWN',
-  # 'PENUP',
-  # 'PENCOLOR',
-  # 'PENSIZE',
-
-  # # control
-  # 'SHOW',
-  # 'HIDE',
-  # 'CLEAN',
-  # 'CLEARSCREEN',
-  # 'WRAP',
-  # 'FILL',
-  # 'SETPENDOWN',
-  # 'SETPENUP',
-  # 'SETPENPAINT',
-  # 'SETPENERASE',
-  # 'SETPENCOLOR',
-  # 'SETPENSIZE',
+functions = {
+  'FW' : lambda x: get_state().fw(x),
+  'BW' : lambda x: get_state().bw(x),
+  'RT' : lambda x: get_state().rt(x),
+  'LT' : lambda x: get_state().lt(x),
 }
 
-functions = [
-  'FORWARD', 'FW',
-  'BACKWARD', 'BW',
-  'RIGHT', 'RT',
-  'LEFT', 'LT',
-  'SETXY', 'SETX', 'SETY',
-  'SETHOME', 'SETH',
-  'HOME',
-
-  # queries
-  'XCOR',
-  'YCOR',
-  'HEADING',
-  'PENDOWN',
-  'PENUP',
-  'PENCOLOR',
-  'PENSIZE',
-
-  # control
-  'SHOW',
-  'HIDE',
-  'CLEAN',
-  'CLEARSCREEN',
-  'WRAP',
-  'FILL',
-  'SETPENDOWN',
-  'SETPENUP',
-  'SETPENPAINT',
-  'SETPENERASE',
-  'SETPENCOLOR',
-  'SETPENSIZE',
-  #...
-]
-
 tokens = [
-  'ARG',
+  'VAR',
   'NUMBER',
+  'FUNC',
+
   'ADD',
   'SUB',
   'MUL',
   'DIV',
+
   'ASSIGN',
   'LROUNDPAREN',
   'RROUNDPAREN',
   'LSQUAREPAREN',
   'RSQUAREPAREN',
 
-  'IF',
-  'LOOP',
-  'TO',
+  # 'IF',
+  # 'LOOP',
+  # 'TO',
   
-  'ID',
-  'END',
-  'fdef_ID',
-  'fdef_END',
+  # 'ID',
+  # 'END',
+  # 'fdef_ID',
+  # 'fdef_END',
 
   #others
   #'COMMENT',
 ]
 
 t_ADD = r'\+'
-t_SUB = r'-'
-t_MUL = r'\+'
-t_DIV = r'/'
+t_SUB = r'\-'
+t_MUL = r'\*'
+t_DIV = r'\/'
 
 t_ASSIGN = r'='
 
@@ -116,41 +58,43 @@ t_RROUNDPAREN  = r'\)'
 t_LSQUAREPAREN = r'\['
 t_RSQUAREPAREN = r'\]'
 
-def t_fdef_END(t):
-  r'(?i)end'
-  t.lexer.pop_state()
-  return t
+t_FUNC = r'(?i)[a-zA-Z][\w+_]*'
 
-def t_END(t):
-  r'(?i)end'
-  raise SyntaxError("No matching TO directive!")
+# def t_fdef_END(t):
+#   r'(?i)end'
+#   t.lexer.pop_state()
+#   return t
+
+# def t_END(t):
+#   r'(?i)end'
+#   raise SyntaxError("No matching TO directive!")
   
-t_LOOP = r'(?i)loop'
-t_IF = r'(?i)if'
+# t_LOOP = r'(?i)loop'
+# t_IF = r'(?i)if'
 
 def t_NUMBER(t):
   r'[-+]?\d*\.?\d+|[-+]?\d+'
   t.value = float(t.value)    
   return t
 
-def t_ARG(t):
+def t_VAR(t):
   r'(?i)\:[a-zA-Z][\w+_]*'
   return t
 
-def t_TO(t):
-  r'(?i)to\ '
-  print('dupaaaa')
-  t.lexer.
-  t.lexer.push_state('fdef')
-  return t
+# def t_TO(t):
+#   r'(?i)to\ '
+#   print('dupaaaa')
+#   t.lexer.
+#   t.lexer.push_state('fdef')
+#   return t
 
-def t_fdef_ID(t):
-  r'(?i)[a-zA-Z][\w+_]*'
-  return t
+# def t_fdef_ID(t):
+#   r'(?i)[a-zA-Z][\w+_]*'
+#   return t
 
-def t_ID(t):
-  r'(?i)[a-zA-Z][\w+_]*'
-  return t
+# def t_ID(t):
+#   r'(?i)[a-zA-Z][\w+_]*'
+#   return t
 
 def t_NEWLINE(t):
   r'\n+'
