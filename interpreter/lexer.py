@@ -1,11 +1,11 @@
 import ply.lex as lex
 
 # Lexer states
-# states = (
-#    ('code', 'exclusive'),
-#    ('fbody', 'inclusive'),
-#    ('lbody', 'inclusive'),
-#  )
+states = (
+   #('code', 'exclusive'),
+   ('fdef', 'inclusive'),
+#   ('lbody', 'inclusive'),
+)
 
 symbols = {
   'FORWARD' : "fw",
@@ -79,7 +79,6 @@ functions = [
 ]
 
 tokens = [
-  'ID',
   'ARG',
   'NUMBER',
   'ADD',
@@ -94,12 +93,15 @@ tokens = [
 
   'IF',
   'LOOP',
-  'FN_DECL',
+  'TO',
+  
+  'ID',
   'END',
+  'fdef_ID',
+  'fdef_END',
 
   #others
-  'COMMENT',
-  'NEWLINE',
+  #'COMMENT',
 ]
 
 t_ADD = r'\+'
@@ -114,13 +116,17 @@ t_RROUNDPAREN  = r'\)'
 t_LSQUAREPAREN = r'\['
 t_RSQUAREPAREN = r'\]'
 
-def t_FN_DECL(t):
-  r'TO '
+def t_fdef_END(t):
+  r'(?i)end'
+  t.lexer.pop_state()
   return t
 
-t_END = r'END/i'
-t_LOOP = r'LOOP/i'
-t_IF = r'IF/i'
+def t_END(t):
+  r'(?i)end'
+  raise SyntaxError("No matching TO directive!")
+  
+t_LOOP = r'(?i)loop'
+t_IF = r'(?i)if'
 
 def t_NUMBER(t):
   r'[-+]?\d*\.?\d+|[-+]?\d+'
@@ -128,19 +134,22 @@ def t_NUMBER(t):
   return t
 
 def t_ARG(t):
-  r'\:[a-zA-Z][\w+_]*'
-  t.is_arg = True
+  r'(?i)\:[a-zA-Z][\w+_]*'
+  return t
+
+def t_TO(t):
+  r'(?i)to\ '
+  print('dupaaaa')
+  t.lexer.
+  t.lexer.push_state('fdef')
+  return t
+
+def t_fdef_ID(t):
+  r'(?i)[a-zA-Z][\w+_]*'
   return t
 
 def t_ID(t):
-  r'[a-zA-Z][\w+_]*'
-  # todo: maybe check is not restricted?
-  #if t.value in symbols:
-  if t.value in functions:
-    t.fn_call = True
-  # else:
-  #   t.type = 'SYM'
-  #   t.value = (t.value, symbols[t.value])
+  r'(?i)[a-zA-Z][\w+_]*'
   return t
 
 def t_NEWLINE(t):
@@ -151,7 +160,7 @@ t_ignore = ' \t'
 t_ignore_COMMENT = r'\;.*'
 
 def t_error(t):
-  print("Illegal character '%s'" % t.value[0])
+  print("Illegal character '%s' at:" % t.value[0], t.lineno)
   t.lexer.skip(1)
 
 def find_column(input, token):
