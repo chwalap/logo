@@ -1,144 +1,123 @@
+import re
 import ply.lex as lex
 
-# Lexer states
-states = (
-   #('code', 'exclusive'),
-   # ('fdef', 'inclusive'),
-#   ('lbody', 'inclusive'),
-)
+# states = (
+#    ('tocode','inclusive'),
+#    ('toargs', 'exclusive'),
+# )
 
-def get_state():
-  pass
-
-functions = {
-  'FW' : lambda x: get_state().fw(x),
-  'BW' : lambda x: get_state().bw(x),
-  'RT' : lambda x: get_state().rt(x),
-  'LT' : lambda x: get_state().lt(x),
-}
+literals = ['+', '-', '*', '/', '%', '=',
+            ')', '(', '[', ']', '>', '<', ':', '"']
 
 tokens = [
-  'VAR',
-  'NUMBER',
-  'FUNC',
+    # 'TRUE', 'FALSE',
+    # 'EQUAL', 'NOT_EQUAL',
+    # 'GT', 'GE', 'LT', 'LE',
+    # 'AND', 'OR', 'NOT',
 
-  'ADD',
-  'SUB',
-  'MUL',
-  'DIV',
+    'NOT_EQUAL',
 
-  'ASSIGN',
-  'LROUNDPAREN',
-  'RROUNDPAREN',
-  'LSQUAREPAREN',
-  'RSQUAREPAREN',
+    'NUMBER',
+    # 'ADD', 'SUB',
+    # 'MUL', 'DIV',
+    # 'MOD', 'POW',
 
-  # 'IF',
-  # 'LOOP',
-  # 'TO',
-  
-  # 'ID',
-  # 'END',
-  # 'fdef_ID',
-  # 'fdef_END',
+    # 'IF', 'IFELSE',
 
-  #others
-  #'COMMENT',
+    # 'REPEAT',
+
+    'WORD',  # 'QUOTED_WORD',
+    # 'MAKE', 'THING',
+
+    # 'PRINT',
+    # 'UPPERCASE', 'LOWERCASE',
+
+    # 'TO', 'TO_NAME', 'TO_ARG', 'TO_CODE', #'END',
+
+    'NEWLINE',
+    # 'LPAREN', 'RPAREN',
 ]
 
-t_ADD = r'\+'
-t_SUB = r'\-'
-t_MUL = r'\*'
-t_DIV = r'\/'
+#t_QUOTED_WORD = r'''(?i)[\"\'](?:[\w]|\\\ )*'''
 
-t_ASSIGN = r'='
-
-t_LROUNDPAREN  = r'\('
-t_RROUNDPAREN  = r'\)'
-t_LSQUAREPAREN = r'\['
-t_RSQUAREPAREN = r'\]'
-
-t_FUNC = r'(?i)[a-zA-Z][\w+_]*'
-
-# def t_fdef_END(t):
-#   r'(?i)end'
-#   t.lexer.pop_state()
-#   return t
-
-# def t_END(t):
-#   r'(?i)end'
-#   raise SyntaxError("No matching TO directive!")
-  
-# t_LOOP = r'(?i)loop'
-# t_IF = r'(?i)if'
-
-def t_NUMBER(t):
-  r'[-+]?\d*\.?\d+|[-+]?\d+'
-  t.value = float(t.value)    
-  return t
-
-def t_VAR(t):
-  r'(?i)\:[a-zA-Z][\w+_]*'
-  return t
-
-# def t_TO(t):
-#   r'(?i)to\ '
-#   print('dupaaaa')
-#   t.lexer.
-#   t.lexer.push_state('fdef')
-#   return t
-
-# def t_fdef_ID(t):
-#   r'(?i)[a-zA-Z][\w+_]*'
-#   return t
-
-# def t_ID(t):
-#   r'(?i)[a-zA-Z][\w+_]*'
-#   return t
-
-def t_NEWLINE(t):
-  r'\n+'
-  t.lexer.lineno = len(t.value)
-
-t_ignore = ' \t'
-t_ignore_COMMENT = r'\;.*'
-
-def t_error(t):
-  print("Illegal character '%s' at:" % t.value[0], t.lineno)
-  t.lexer.skip(1)
-
-def find_column(input, token):
-  line_start = input.rfind('\n', 0, token.lexpos) + 1
-  return (token.lexpos - line_start) + 1
-
-lexer = lex.lex()
+t_WORD = r'(?:[\w]|\\\ )+'  # [a-zA-Z][\w_]*'
 
 
-
-# def t_LOOP(t):
-#   r'''^ *(?:loop|LOOP)\s+(?'start'\d+)?\s+(?'end'\d+)\s+\[\s*+(?'lbody'(?:[^\]]|\n)*?)\s*\] *$'''
-#   r'^ *loop /i'
-#   t.loop.i_start = t.lex.start
-#   t.loop.i_end = t.lex.end
-#   if t.loop.i_start <= t.loop.i_end:
-#     t.loop.lbody = t.lex.lbody
+# def t_LPAREN(t):
+#     r'\('
+#     t.lexer.p["open"].append(t.lexer.lexpos)
 #     return t
 
-  
-#   #r'''^ *(?:to|TO) +(?'fname'\w+)(?'args'(?: *+\:[a-zA-Z_]\w*)*).*\n(?'fbody'(?:.*\n)*?) *(?:end|END) *?\n'''
-#   t.value = lstrip(lstrip(str(t.lexer.fname))[2:])
+
+# def t_RPAREN(t):
+#     r'\)'
+#     t.lexer.p["close"].append(t.lexer.lexpos)
+#     return t
+
+
+def t_NOT_EQUAL(t):
+    r'<>'
+    return t
+
+
+# t_toargs_TO_ARG = r'\:[a-zA-Z][\w+_]*'
+# t_toargs_TO_NAME = r'[a-zA-Z][\w+_]*'
+
+# def t_TO(t):
+#   r'(?i)to'
+#   t.lexer.push_state('toargs')
 #   return t
 
-# def t_FN_CALL(t):
-#   r'[a-zA-Z_][\w_]*'
-#   #r'''^(?! *to( |\n)) *(?'fname'[a-zA-Z_]\w*) *(?'args'(?: *(?: *+\[(?: *\:?\w+)* *\])|(?: *+\:?\w+)*|(?:\s*+))) *\n'''
-#   #r'''^(?!\s*to\s+) *(?'fname'[a-zA-Z_]\w*) *(?'args'(?: *\:?\w*)*)$'''
-#   t.value = str(t.value)
+def t_NUMBER(t):
+    r'[+-]?([0-9]*[.])?[0-9]+'
+    t.value = float(t.value)
+    return t
+
+# def t_toargs_NEWLINE(t):
+#   r'\n+'
+#   t.lexer.pop_state() # toargs
+#   t.lexer.push_state('tocode')
+#   t.lexer.code_start = t.lexer.lexpos
 #   return t
 
-# currently all vars are also fn
-# def t_VAR(t):
+# def t_toargs_error(t):
+#   print("[TO_ARGS] Illegal character '%s' at:" % t.value[0], t.lineno)
+
+# t_toargs_ignore = ' \t'
+
+# def t_tocode_END(t):
+#   r'(?i)end'
+#   t.value = t.lexer.lexdata[t.lexer.code_start : t.lexer.lexpos + 1]
+#   t.type = "TO_CODE"
+#   t.lexer.lineno += t.value.count('\n')
+#   t.lexer.pop_state() # tocode
 #   return t
-#   r'\w+(\.\w+)?(\d+)?/i'
-#   t.type = reserved.get(t.value, 'VAR')
-#   return t
+
+
+def find_column(input, token):
+    line_start = input.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
+
+def t_NEWLINE(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+    t.value = t.value[:1]
+    return t
+
+
+t_ignore = ' \t'
+t_ignore_COMMENT = r';.*'
+
+
+def t_error(t):
+    print("Illegal character '%s' at:" % t.value[0], t.lineno)
+
+
+def t_eof(t):
+    return None
+
+
+lexer = lex.lex(debug=True, reflags=re.VERBOSE)
+# additional struct for storing parenthesis positions
+lexer.p = {"open": [], "close": []}
