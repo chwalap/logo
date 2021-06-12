@@ -20,11 +20,11 @@ class TestParserLogoViriables(unittest.TestCase):
         # todo: add tests for procedure thing
 
     def test_variable_set_value(self):
-        # todo: this is bug, make does not return (I guess?)
-        self.assertEqual(self.p.parse("make \"foo 1"), 1)
-        self.assertEqual(self.p.parse("make \"biz :foo + :bar"), 0)
-        self.assertEqual(self.p.parse("make \"bar \"lalala"), 0)
-        self.assertEqual(self.p.parse(":foo = :foo + :bar"), 0)
+        self.assertEqual(self.p.parse("make \"foo 1"), None)
+        # todo: bug -> should parse :foo + :bar before calling the function
+        self.assertEqual(self.p.parse("make \"biz :foo + :bar"), None)
+        self.assertEqual(self.p.parse("make \"bar \"lalala"), None)
+        self.assertEqual(self.p.parse(":foo = :foo + :bar"), 123)
 
 
 if __name__ == '__main__':

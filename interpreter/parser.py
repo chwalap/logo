@@ -185,7 +185,6 @@ def handle_procedure(procedure_name):
         result = call_procedure_wrapper(procedure)
         if does_return:
             return handle_value(result)
-        return
     else:
 
         # 4. Put procedure on the stack
@@ -195,7 +194,7 @@ def handle_procedure(procedure_name):
         })
 
     # 5. Returno procedure name
-    return procedure_name
+    # return procedure_name
 
     # Append result to the list of parameters of the outer procedure
     # But only if there are no parenthesis between them.
