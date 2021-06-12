@@ -40,8 +40,17 @@ tokens = [
 
 #t_QUOTED_WORD = r'''(?i)[\"\'](?:[\w]|\\\ )*'''
 
-t_WORD = r'(?:[\w]|\\\ )+'  # [a-zA-Z][\w_]*'
 
+def t_NUMBER(t):
+    r'[+-]?([0-9]*[.])?[0-9]+'
+    t.value = float(t.value)
+    return t
+
+
+def t_WORD(t):
+    r'\w(?:[\w]|\\\ )*'  # [a-zA-Z][\w_]*'
+    t.value = t.value.replace("\\ ", " ")
+    return t
 
 # def t_LPAREN(t):
 #     r'\('
@@ -67,11 +76,6 @@ def t_NOT_EQUAL(t):
 #   r'(?i)to'
 #   t.lexer.push_state('toargs')
 #   return t
-
-def t_NUMBER(t):
-    r'[+-]?([0-9]*[.])?[0-9]+'
-    t.value = float(t.value)
-    return t
 
 # def t_toargs_NEWLINE(t):
 #   r'\n+'

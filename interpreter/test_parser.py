@@ -80,7 +80,18 @@ class TestParserLogoSimpleMathExamples(unittest.TestCase):
         self.assertTrue(self.p.parse("88 / 4 + 2 * 3 = 28"))
 
     def test_word_converters(self):
-        self.assertEqual()
+        # self.assertEqual(self.p.parse("8"), "8.0") # todo: decide whether word should be a string or any type
+        self.assertEqual(self.p.parse("abcd"), "abcd")
+        # self.assertEqual(self.p.parse("2 + 4"), "6.0") # todo: the same here
+        self.assertEqual(self.p.parse(
+            "\"siała\\ baba\\ mak"), "siała baba mak")
+        self.assertEqual(self.p.parse("( antanananarywa )"), "antanananarywa")
+        self.assertEqual(self.p.parse("foo + bar"), "foobar")
+        self.assertEqual(self.p.parse("foo+bar"), "foobar")
+        self.assertRaises(TypeError, lambda: self.p.parse("foobar - bar"))
+        self.assertRaises(TypeError, lambda: self.p.parse("foobar-bar"))
+        self.assertRaises(TypeError, lambda: self.p.parse("foo * bar"))
+        self.assertRaises(TypeError, lambda: self.p.parse("foo / bar"))
 
 
 if __name__ == '__main__':
