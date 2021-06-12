@@ -185,7 +185,7 @@ def handle_procedure(procedure_name):
         result = call_procedure_wrapper(procedure)
         if does_return:
             return handle_value(result)
-
+        return
     else:
 
         # 4. Put procedure on the stack
