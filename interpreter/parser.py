@@ -101,6 +101,7 @@ def new_scope(prev_scope, args):
 
 # Operators precedence
 precedence = (
+    ('nonassoc', 'MERGE_WORDS_AT_THE_END'),
     # ('nonassoc', 'NUM_TO_WORD'),
     ('right', '=', 'NOT_EQUAL'),
     ('left', '+', '-'),
@@ -258,7 +259,7 @@ def handle_value(value):
     # 2. Check in the loop whether most top procedure can be executed
     #    We must check 'top_argc + 1' beacuase there is also a procedure
     #    name on the list.
-    result = 0
+    result = None
     while procedure_on_stack_may_be_called():
 
         # a) Take procedude data from the stack and load real procedure
@@ -444,9 +445,9 @@ def p_number(p):
     p[0] = p[1]  # todo: make sure  arithmetic is handled first
 
 
-def p_number_in_parents(p):
-    '''number : '(' number ')' '''
-    p[0] = p[2]
+# def p_number_in_parents(p):
+#     '''number : '(' number ')' '''
+#     p[0] = p[2]
 
 # def p_word_numer_bianry_operator_parenthesis_upgrade(p):
 #   '''number : '(' word '+' number ')'
@@ -541,7 +542,7 @@ def p_word_name(p):
 
 
 def p_word_word(p):
-    'word : word word'
+    'word : word word %prec MERGE_WORDS_AT_THE_END'
     p[0] = handle_word_word(p[1], p[2])
 
 ############################################################################

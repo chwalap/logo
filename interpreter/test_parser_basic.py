@@ -93,6 +93,12 @@ class TestParserLogoSimpleMathExamples(unittest.TestCase):
         self.assertRaises(TypeError, lambda: self.p.parse("foo * bar"))
         self.assertRaises(TypeError, lambda: self.p.parse("foo / bar"))
 
+    def test_complicated_arithmetic_equations(self):
+        self.assertEqual(self.p.parse(
+            "4 * 2 - (3 + 20 * 1.123) / 5 - 2 * (12 + 5 / 3.14)"), -24.276713375796177)
+        self.assertAlmostEqual(self.p.parse(
+            "22.7 + 3.14 * ( 2.22 - 1.12 / 44.4 + (2 - 99.1 / 666.666 ) + (2 * (4 / 2))) + 1.0"), 48.964831326)
+
 
 if __name__ == '__main__':
     unittest.main()
