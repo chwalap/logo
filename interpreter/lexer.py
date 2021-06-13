@@ -24,7 +24,7 @@ tokens = [
 
     # 'IF', 'IFELSE',
 
-    # 'REPEAT',
+    'REPEAT',
 
     'WORD',  # 'QUOTED_WORD',
     # 'MAKE', 'THING',
@@ -41,6 +41,11 @@ tokens = [
 #t_QUOTED_WORD = r'''(?i)[\"\'](?:[\w]|\\\ )*'''
 
 
+def t_REPEAT(t):
+    r'REPEAT'
+    return t
+
+
 def t_NUMBER(t):
     r'[+-]?([0-9]*[.])?[0-9]+'
     t.value = float(t.value)
@@ -51,6 +56,7 @@ def t_WORD(t):
     r'\w(?:[\w]|\\\ )*'  # [a-zA-Z][\w_]*'
     t.value = t.value.replace("\\ ", " ")
     return t
+
 
 # def t_LPAREN(t):
 #     r'\('
@@ -122,6 +128,6 @@ def t_eof(t):
     return None
 
 
-lexer = lex.lex(debug=True, reflags=re.VERBOSE)
+lexer = lex.lex()  # debug=True, reflags=re.VERBOSE)
 # additional struct for storing parenthesis positions
 lexer.p = {"open": [], "close": []}

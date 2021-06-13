@@ -1,15 +1,15 @@
+from ctypes import cdll
 import inspect
 from io import UnsupportedOperation
 from re import DEBUG, I
 import turtle
 import ply.yacc as yacc
-from interpreter.lexer import tokens
+from .lexer import tokens, lex
 import copy
 import time
-from logo import *
 
 # This is what we want to parse
-start = "word"
+start = "program"
 
 ############################################################################################
 # The procedure stack is never empty. There is at least one, 'Main' procedure
@@ -74,17 +74,17 @@ def does_procedure_return(func):
 
 
 def logo_make(name, value):
-    print(f'Inside logo_make({name}, {value})')
+    # print(f'Inside logo_make({name}, {value})')
     vars[name] = value
 
 
 def logo_thing(name):
-    print(f'Inside logo_thing({name})')
+    # print(f'Inside logo_thing({name})')
     return vars[name]
 
 
 def logo_print(text):
-    print(f'Inside logo_print({text})')
+    # print(f'Inside logo_print({text})')
     print(text)
 
 
@@ -111,6 +111,7 @@ precedence = (
     # ('nonassoc', 'REDUCE_WORDS'), #, 'REDUCE_RETURN_WORDS'
     ('left', '(', ')'),  # , 'LPAREN', 'RPAREN'),
     # ('nonassoc', 'ALWAYS_REDUCE'),
+    # ('left', 'MAKE_LIST_FIRST'),
 )
 
 # Internal interpreter state
@@ -168,7 +169,7 @@ def handle_word(word):
 #   4. Otherwise put currently handled procedure on the procedure stack and quit.
 ############################################################################################
 def handle_procedure(procedure_name):
-
+    global initial_stack_level
     procedure = procedures[procedure_name]
 
     # 1. Gather information about procedure
@@ -253,7 +254,7 @@ def handle_value(value):
     # 1. Add argument to the very top procedure on the stack.
     stack[-1]["argv"].append(value)
 
-    print("New value on ", get_current_proc_name(), " argument list: ", value)
+    # print("New value on ", get_current_proc_name(), " argument list: ", value)
 
     # 2. Check in the loop whether most top procedure can be executed
     #    We must check 'top_argc + 1' beacuase there is also a procedure
@@ -269,16 +270,16 @@ def handle_value(value):
         procedure_name = argv.pop(0)
         procedure = procedures[procedure_name]
 
-        print("Start calling procedure: ", get_current_proc_name(),
-              " with arguments: ", argv)
+        # print("Start calling procedure: ", procedure_name,
+        #       " with arguments: ", argv)
 
-        print("Stack after popping most top procedure: ", stack)
+        # print("Stack after popping most top procedure: ", stack)
 
         # b) Check number of arguments, just in case
         expected_argc = len(inspect.getfullargspec(procedure).args)
 
-        print("Number of expected arguments: ",
-              expected_argc, "delivered: ", argc)
+        # print("Number of expected arguments: ",
+        #       expected_argc, "delivered: ", argc)
 
         if argc != expected_argc:
             raise WrongParameterCount(argc, expected_argc)
@@ -287,7 +288,7 @@ def handle_value(value):
         #    on this stack level.
         does_return = does_procedure_return(procedure)
 
-        print("Procedure ", procedure_name, " returns? ", does_return)
+        # print("Procedure ", procedure_name, " returns? ", does_return)
 
         # we will have to fix this 1 for nested procedure definitions
         if len(stack) > 1 and not does_return:
@@ -305,39 +306,7 @@ def handle_value(value):
     # Return the value of last called procedure
     return result
 
-    # Append result to the list of parameters of the outer procedure
-    # But only if there are no parenthesis between them.
-    # Count and compare open and closed parenthesis for current lexer position
 
-    # current_lexer_pos = p.lexer.lexpos
-
-    # opened_parenthesis = sum(
-    #     1 for i in p.lexer.p["open"] if i < current_lexer_pos)
-    # closed_parenthesis = sum(
-    #     1 for i in p.lexer.p["close"] if i < current_lexer_pos)
-
-    # print("opened: ", opened_parenthesis)
-    # print("closed: ", closed_parenthesis)
-
-    # if opened_parenthesis == closed_parenthesis:
-    #     outer_procedure.append(result)
-    #     return
-
-    # todo: check whether it will help? Next call
-    # to this function will deal with this and it
-    # will solve problem with fn ()
-    # if does_return:
-    #     try:
-    #         return int(result)
-    #     except:
-    #         return result
-
-
-#########################################################################################
-# This should be possible only when any of the two is None or one is existing procedure
-# call. Although it shouldn't happen now. #todo: confirm that and raise an Exception in
-# case any word is None.
-#########################################################################################
 def handle_word_word(left_word, right_word):
     # In case any of these words is None just return the opposite
     if left_word is None:
@@ -354,53 +323,66 @@ def handle_word_word(left_word, right_word):
             left_word, right_word)
 
 
-#########################################################################################
-# New line is kind of special. IT requires to take all procedures from the stack and
-# call them. In case of missing variables dnagling words we just raise an exception.
-#########################################################################################
 def handle_new_line(last_in_line):
 
-    # this should always return the value, not a procedure name
-    # the reason why is that if last_in_line would be a procedure name
-    # it should be called with no arguments and its value should be returned here
     last_value_in_line = handle_word(last_in_line)
 
-    # we should check it anyway
     if last_value_in_line in procedures:
         raise NoMoreWordsInThisLine(last_value_in_line)
 
-    # If last_in_line was a value then handle_value should take out
-    # all procedures from the stack and call them.
-    # In case it was a procedure name we either failed above or get the return value
     return handle_value(last_value_in_line)
 
 
-# todo: move this to documentation
-#########################################################################################
-# Below are all of the parser's rules used in this project.
-# We have tried many approaches to write this interpreter. Few of them even worked
-# to some degree. However, after spending so many hours trying to write,
-# not the best, but only a decent interpreter of LOGO. After, I don't even know which
-# trial and starting from scratch. We finally figured it out!
-# Here is how you can make simple, but supprisingly flexible interpreter of LOGO.
-# First of all, in LOGO, everything may be treated as a word. Starting from
-# procedure's name and the way you call it, to the variable's name and value, to the
-# numbers, strings and everything else. This is actually the biggest obstacle
-# to properly interpret LOGO. You see, in LOGO, at least in dialect we have studied,
-# you may write all of the code in one line. At least, as long as it makes logical
-# sense and allows for calling all nested procedures with required number
-# of arguments. So, just imagine that this text is just very long chain of nested
-# functions, variable's names and strings. Just kidding, it's not that bad. I mean...
-# It is, but by introducing few additional restrictions it's possible to do it well.
-# In our parser we have tried to use in our advantage ambiguyity of the language
-# structure. Our interpreter splits the input to words and then, by using few simple
-# converters, casts everything to words. For example strings, represented by pure
-# text with just one quotation mark at the beginning must be converted to words
-# in the very moment our very simple lexer gives us a new token, which I guess we
-# can start calling word. The same with all the variables, to be compliant with
-# the standard, we must replace this form of variable ':variable' with it's value.
-# Which, by the way, may be the name of another variable. Or procedure, who knows?
-#########################################################################################
+def p_program(p):
+    '''program : statements'''
+    p[0] = p[1]
+
+
+def p_statements(p):
+    '''statements : statements statement
+                  | statement'''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1] + [p[2]]
+
+
+def p_statement(p):
+    '''statement : word'''
+    p[0] = p[1]
+
+
+def p_word_list_empty(p):
+    '''word-list : '['  word-list-statement ']' '''
+    p[0] = p[2]
+
+
+def p_word_list_statement(p):
+    '''word-list-statement : WORD
+                           | number
+                           | word-list-statement WORD
+                           | word-list-statement number
+                           | word-list-statement NEWLINE'''
+    if len(p) == 3 and p[2] != '\n':
+        p[0] = p[1] + [p[2]]
+    elif len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1]
+
+
+def p_repeat(p):
+    '''statement : REPEAT NUMBER word-list NEWLINE'''
+
+    clexer = p.lexer.clone()
+    commands = " ".join(str(x) for x in p[3])
+
+    N = int(p[2])
+
+    for _ in range(N):
+        new_parser().parse(commands.replace('\n', ''),
+                           lexer=clexer, debug=True, tracking=True)
+
 
 def p_work_newline(p):
     'word : word NEWLINE'
@@ -484,7 +466,7 @@ def p_arithmetic_binary_operator(p):
             | word '/' word
             | word '%' word
             | word '^' word'''
-    print(p[1], p[2], p[3])
+    # print(p[1], p[2], p[3])
     operator_fn = get_binary_operator_fn(p[2])
     if isinstance(p[1], float) and isinstance(p[3], float):
         p[0] = float(operator_fn(p[1], p[3]))

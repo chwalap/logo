@@ -1,4 +1,4 @@
-from interpreter.parser import new_parser
+from lparser import new_parser
 import unittest
 
 

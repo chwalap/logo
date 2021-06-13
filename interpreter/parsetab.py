@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'wordnonassocMERGE_WORDS_AT_THE_ENDright=NOT_EQUALleft+-left*/%right:"left^left()NEWLINE NOT_EQUAL NUMBER WORDword : word NEWLINEnumber : NUMBERword : word \'+\' word\n            | word \'-\' word\n            | word \'*\' word\n            | word \'/\' word\n            | word \'%\' word\n            | word \'^\' wordword : word \'=\' wordword : word NOT_EQUAL wordword : \'(\' word \')\' word : WORDword : numberword : \':\' WORDword : \'"\' WORDword : word word %prec MERGE_WORDS_AT_THE_ENDempty :'
+_lr_signature = 'programnonassocMERGE_WORDS_AT_THE_ENDright=NOT_EQUALleft+-left*/%right:"left^left()NEWLINE NOT_EQUAL NUMBER REPEAT WORDprogram : statementsstatements : statements statement\n                  | statementstatement : wordword-list : \'[\'  word-list-statement \']\' word-list-statement : WORD\n                           | number\n                           | word-list-statement WORD\n                           | word-list-statement number\n                           | word-list-statement NEWLINEstatement : REPEAT NUMBER word-list NEWLINEword : word NEWLINEnumber : NUMBERword : word \'+\' word\n            | word \'-\' word\n            | word \'*\' word\n            | word \'/\' word\n            | word \'%\' word\n            | word \'^\' wordword : word \'=\' wordword : word NOT_EQUAL wordword : \'(\' word \')\' word : WORDword : numberword : \':\' WORDword : \'"\' WORDword : word word %prec MERGE_WORDS_AT_THE_ENDempty :'
     
-_lr_action_items = {'(':([0,1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,],[2,2,2,-12,-13,-2,2,-1,2,2,2,2,2,2,2,2,2,-14,-15,2,2,2,2,2,2,2,2,-11,]),'WORD':([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,],[3,3,3,-12,-13,19,20,-2,-16,-1,3,3,3,3,3,3,3,3,3,-14,-15,-3,-4,-5,-6,-7,-8,-9,-10,-11,]),':':([0,1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,],[5,5,5,-12,-13,-2,5,-1,5,5,5,5,5,5,5,5,5,-14,-15,5,5,5,5,5,-8,5,5,-11,]),'"':([0,1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,],[6,6,6,-12,-13,-2,6,-1,6,6,6,6,6,6,6,6,6,-14,-15,6,6,6,6,6,-8,6,6,-11,]),'NUMBER':([0,1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,],[7,7,7,-12,-13,-2,-16,-1,7,7,7,7,7,7,7,7,7,-14,-15,-3,-4,-5,-6,-7,-8,-9,-10,-11,]),'$end':([1,3,4,7,8,9,19,20,21,22,23,24,25,26,27,28,29,],[0,-12,-13,-2,-16,-1,-14,-15,-3,-4,-5,-6,-7,-8,-9,-10,-11,]),'NEWLINE':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[9,-12,-13,-2,-16,-1,9,-14,-15,-3,-4,-5,-6,-7,-8,-9,-10,-11,]),'+':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[10,-12,-13,-2,10,-1,10,-14,-15,-3,-4,-5,-6,-7,-8,10,10,-11,]),'-':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[11,-12,-13,-2,11,-1,11,-14,-15,-3,-4,-5,-6,-7,-8,11,11,-11,]),'*':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[12,-12,-13,-2,12,-1,12,-14,-15,12,12,-5,-6,-7,-8,12,12,-11,]),'/':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[13,-12,-13,-2,13,-1,13,-14,-15,13,13,-5,-6,-7,-8,13,13,-11,]),'%':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[14,-12,-13,-2,14,-1,14,-14,-15,14,14,-5,-6,-7,-8,14,14,-11,]),'^':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[15,-12,-13,-2,15,-1,15,-14,-15,15,15,15,15,15,-8,15,15,-11,]),'=':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[16,-12,-13,-2,16,-1,16,-14,-15,-3,-4,-5,-6,-7,-8,16,16,-11,]),'NOT_EQUAL':([1,3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[17,-12,-13,-2,17,-1,17,-14,-15,-3,-4,-5,-6,-7,-8,17,17,-11,]),')':([3,4,7,8,9,18,19,20,21,22,23,24,25,26,27,28,29,],[-12,-13,-2,-16,-1,29,-14,-15,-3,-4,-5,-6,-7,-8,-9,-10,-11,]),}
+_lr_action_items = {'REPEAT':([0,2,3,4,6,8,9,12,13,14,25,26,27,28,29,30,31,32,33,34,37,38,],[5,5,-3,-4,-13,-23,-24,-2,-27,-12,-25,-26,-14,-15,-16,-17,-18,-19,-20,-21,-22,-11,]),'(':([0,2,3,4,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,37,38,],[7,7,-3,7,-13,7,-23,-24,-2,7,-12,7,7,7,7,7,7,7,7,7,-25,-26,7,7,7,7,7,7,7,7,-22,-11,]),'WORD':([0,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,36,37,38,39,40,41,43,44,45,],[8,8,-3,8,-13,8,-23,-24,25,26,-2,-27,-12,8,8,8,8,8,8,8,8,8,-25,-26,-14,-15,-16,-17,-18,-19,-20,-21,40,-22,-11,43,-6,-7,-8,-9,-10,]),':':([0,2,3,4,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,37,38,],[10,10,-3,10,-13,10,-23,-24,-2,10,-12,10,10,10,10,10,10,10,10,10,-25,-26,10,10,10,10,10,-19,10,10,-22,-11,]),'"':([0,2,3,4,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,37,38,],[11,11,-3,11,-13,11,-23,-24,-2,11,-12,11,11,11,11,11,11,11,11,11,-25,-26,11,11,11,11,11,-19,11,11,-22,-11,]),'NUMBER':([0,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,36,37,38,39,40,41,43,44,45,],[6,6,-3,6,23,-13,6,-23,-24,-2,-27,-12,6,6,6,6,6,6,6,6,6,-25,-26,-14,-15,-16,-17,-18,-19,-20,-21,6,-22,-11,6,-6,-7,-8,-9,-10,]),'$end':([1,2,3,4,6,8,9,12,13,14,25,26,27,28,29,30,31,32,33,34,37,38,],[0,-1,-3,-4,-13,-23,-24,-2,-27,-12,-25,-26,-14,-15,-16,-17,-18,-19,-20,-21,-22,-11,]),'NEWLINE':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,35,37,39,40,41,42,43,44,45,],[14,-13,-23,-24,-27,-12,14,-25,-26,-14,-15,-16,-17,-18,-19,-20,-21,38,-22,45,-6,-7,-5,-8,-9,-10,]),'+':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[15,-13,-23,-24,15,-12,15,-25,-26,-14,-15,-16,-17,-18,-19,15,15,-22,]),'-':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[16,-13,-23,-24,16,-12,16,-25,-26,-14,-15,-16,-17,-18,-19,16,16,-22,]),'*':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[17,-13,-23,-24,17,-12,17,-25,-26,17,17,-16,-17,-18,-19,17,17,-22,]),'/':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[18,-13,-23,-24,18,-12,18,-25,-26,18,18,-16,-17,-18,-19,18,18,-22,]),'%':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[19,-13,-23,-24,19,-12,19,-25,-26,19,19,-16,-17,-18,-19,19,19,-22,]),'^':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[20,-13,-23,-24,20,-12,20,-25,-26,20,20,20,20,20,-19,20,20,-22,]),'=':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[21,-13,-23,-24,21,-12,21,-25,-26,-14,-15,-16,-17,-18,-19,21,21,-22,]),'NOT_EQUAL':([4,6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[22,-13,-23,-24,22,-12,22,-25,-26,-14,-15,-16,-17,-18,-19,22,22,-22,]),')':([6,8,9,13,14,24,25,26,27,28,29,30,31,32,33,34,37,],[-13,-23,-24,-27,-12,37,-25,-26,-14,-15,-16,-17,-18,-19,-20,-21,-22,]),']':([6,39,40,41,43,44,45,],[-13,42,-6,-7,-8,-9,-10,]),'[':([23,],[36,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'word':([0,1,2,8,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,],[1,8,18,8,21,22,23,24,25,26,27,28,8,8,8,8,8,8,8,8,8,]),'number':([0,1,2,8,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,],[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,]),}
+_lr_goto_items = {'program':([0,],[1,]),'statements':([0,],[2,]),'statement':([0,2,],[3,12,]),'word':([0,2,4,7,13,15,16,17,18,19,20,21,22,24,27,28,29,30,31,32,33,34,],[4,4,13,24,13,27,28,29,30,31,32,33,34,13,13,13,13,13,13,13,13,13,]),'number':([0,2,4,7,13,15,16,17,18,19,20,21,22,24,27,28,29,30,31,32,33,34,36,39,],[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,41,44,]),'word-list':([23,],[35,]),'word-list-statement':([36,],[39,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,22 +26,33 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> word","S'",1,None,None,None),
-  ('word -> word NEWLINE','word',2,'p_work_newline','parser.py',407),
-  ('number -> NUMBER','number',1,'p_number','parser.py',444),
-  ('word -> word + word','word',3,'p_arithmetic_binary_operator','parser.py',482),
-  ('word -> word - word','word',3,'p_arithmetic_binary_operator','parser.py',483),
-  ('word -> word * word','word',3,'p_arithmetic_binary_operator','parser.py',484),
-  ('word -> word / word','word',3,'p_arithmetic_binary_operator','parser.py',485),
-  ('word -> word % word','word',3,'p_arithmetic_binary_operator','parser.py',486),
-  ('word -> word ^ word','word',3,'p_arithmetic_binary_operator','parser.py',487),
-  ('word -> word = word','word',3,'p_word_equals_word','parser.py',497),
-  ('word -> word NOT_EQUAL word','word',3,'p_word_not_equal','parser.py',502),
-  ('word -> ( word )','word',3,'p_word_in_parentheses','parser.py',520),
-  ('word -> WORD','word',1,'p_word','parser.py',525),
-  ('word -> number','word',1,'p_word_number','parser.py',530),
-  ('word -> : WORD','word',2,'p_word_value','parser.py',535),
-  ('word -> " WORD','word',2,'p_word_name','parser.py',540),
-  ('word -> word word','word',2,'p_word_word','parser.py',545),
-  ('empty -> <empty>','empty',0,'p_empty','parser.py',580),
+  ("S' -> program","S'",1,None,None,None),
+  ('program -> statements','program',1,'p_program','lparser.py',337),
+  ('statements -> statements statement','statements',2,'p_statements','lparser.py',342),
+  ('statements -> statement','statements',1,'p_statements','lparser.py',343),
+  ('statement -> word','statement',1,'p_statement','lparser.py',351),
+  ('word-list -> [ word-list-statement ]','word-list',3,'p_word_list_empty','lparser.py',356),
+  ('word-list-statement -> WORD','word-list-statement',1,'p_word_list_statement','lparser.py',361),
+  ('word-list-statement -> number','word-list-statement',1,'p_word_list_statement','lparser.py',362),
+  ('word-list-statement -> word-list-statement WORD','word-list-statement',2,'p_word_list_statement','lparser.py',363),
+  ('word-list-statement -> word-list-statement number','word-list-statement',2,'p_word_list_statement','lparser.py',364),
+  ('word-list-statement -> word-list-statement NEWLINE','word-list-statement',2,'p_word_list_statement','lparser.py',365),
+  ('statement -> REPEAT NUMBER word-list NEWLINE','statement',4,'p_repeat','lparser.py',375),
+  ('word -> word NEWLINE','word',2,'p_work_newline','lparser.py',386),
+  ('number -> NUMBER','number',1,'p_number','lparser.py',423),
+  ('word -> word + word','word',3,'p_arithmetic_binary_operator','lparser.py',461),
+  ('word -> word - word','word',3,'p_arithmetic_binary_operator','lparser.py',462),
+  ('word -> word * word','word',3,'p_arithmetic_binary_operator','lparser.py',463),
+  ('word -> word / word','word',3,'p_arithmetic_binary_operator','lparser.py',464),
+  ('word -> word % word','word',3,'p_arithmetic_binary_operator','lparser.py',465),
+  ('word -> word ^ word','word',3,'p_arithmetic_binary_operator','lparser.py',466),
+  ('word -> word = word','word',3,'p_word_equals_word','lparser.py',476),
+  ('word -> word NOT_EQUAL word','word',3,'p_word_not_equal','lparser.py',481),
+  ('word -> ( word )','word',3,'p_word_in_parentheses','lparser.py',499),
+  ('word -> WORD','word',1,'p_word','lparser.py',504),
+  ('word -> number','word',1,'p_word_number','lparser.py',509),
+  ('word -> : WORD','word',2,'p_word_value','lparser.py',514),
+  ('word -> " WORD','word',2,'p_word_name','lparser.py',519),
+  ('word -> word word','word',2,'p_word_word','lparser.py',524),
+  ('empty -> <empty>','empty',0,'p_empty','lparser.py',559),
 ]

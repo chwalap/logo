@@ -1,1 +1,12 @@
-2 + 2
+REPEAT 4 [ forward 100 left 90 ]
+sleep 2000
+
+forward 100 left 90
+REPEAT 5 [ backward 1 right 0.001 ]
+sleep 2000
+forward 100 right 50
+REPEAT 36 [ forward 10 right 10 ]
+
+forward 100 right 10
+
+sleep 5000
