@@ -128,6 +128,6 @@ def t_eof(t):
     return None
 
 
-lexer = lex.lex()  # debug=True, reflags=re.VERBOSE)
+lexer = lex.lex(debug=True, reflags=re.VERBOSE)
 # additional struct for storing parenthesis positions
 lexer.p = {"open": [], "close": []}

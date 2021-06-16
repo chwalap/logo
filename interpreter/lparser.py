@@ -102,16 +102,12 @@ def new_scope(prev_scope, args):
 # Operators precedence
 precedence = (
     ('nonassoc', 'MERGE_WORDS_AT_THE_END'),
-    # ('nonassoc', 'NUM_TO_WORD'),
     ('right', '=', 'NOT_EQUAL'),
     ('left', '+', '-'),
     ('left', '*', '/', '%'),
     ('right', ':', '"'),
     ('left', '^'),
-    # ('nonassoc', 'REDUCE_WORDS'), #, 'REDUCE_RETURN_WORDS'
-    ('left', '(', ')'),  # , 'LPAREN', 'RPAREN'),
-    # ('nonassoc', 'ALWAYS_REDUCE'),
-    # ('left', 'MAKE_LIST_FIRST'),
+    ('left', '(', ')'),
 )
 
 # Internal interpreter state

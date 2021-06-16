@@ -38,8 +38,8 @@ Na początku tworzenia projektu zmbitnie stwierdziliśmy, że oddając projekt c
 * [X] - wywoływania procedur o określonej liczbie argumentów
 * [X] - wielokrotne zagnieżdżenie wywoływania procedur
 * [X] - sterowanie wspomnianym wcześniej żółwiem z pełną obsługą rysowania
-* [x] - instrukcje warunkowe
-* [ ] - pętlę repeat
+* [ ] - instrukcje warunkowe
+* [X] - pętlę repeat
 * [ ] - deklarację własnych procedur
 
 Niestety poziom skomplikowania tego języka uniemożliwił nam skończenie wszystkich zaplanowanych featureów. Na swoje usprawiadliwienie mamy tylko poniższy paragraf.
